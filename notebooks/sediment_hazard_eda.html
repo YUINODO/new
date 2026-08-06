@@ -7796,7 +7796,7 @@ a.anchor-link {
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c3831f33">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=21915da1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7816,12 +7816,12 @@ JPNB(Jupyter Notebook)方式で探索的データ分析(EDA)を行う。</p>
 <tr>
 <td><code>area</code></td>
 <td><code>area_20260806.shp</code></td>
-<td>区市町村の行政区域ポリゴン</td>
+<td>監視対象地区(土砂災害危険度情報システムの監視単位)ポリゴン(155 件)</td>
 </tr>
 <tr>
 <td><code>mesh</code></td>
 <td><code>mesh_20260806.shp</code></td>
-<td>地図メッシュポリゴン(166,400 件)</td>
+<td>1km メッシュ(標準地域メッシュ3次メッシュ, 166,400 件)</td>
 </tr>
 <tr>
 <td><code>keikai_doseki</code></td>
@@ -7840,8 +7840,10 @@ JPNB(Jupyter Notebook)方式で探索的データ分析(EDA)を行う。</p>
 </tr>
 </tbody>
 </table>
-<p>属性名から、東京都が公開する「土砂災害警戒区域等」(土砂災害防止法に基づく指定区域)
-のオープンデータであると判断できる。区市町村コードから東京都内 62 区市町村
+<p>属性名・件数から、東京都建設局河川部が公開する「東京都土砂災害危険度情報」で用いられる
+GIS データ一式(土砂災害警戒区域・特別警戒区域/1km メッシュ/監視対象地区)であると判断できる。
+<code>area</code> は区市町村そのものの行政境界ではなく、区市町村をさらに細分した「監視対象地区」
+(例: 練馬区だけで 31 地区)であることに注意。区市町村コードからは東京都内 62 区市町村
 (23区・26市・5町・8村、伊豆諸島・小笠原諸島を含む)全域を対象としたデータと分かる。</p>
 <p>データ本体(shp 一式)はサイズが大きいためリポジトリには含めず、本ノートブックは
 実行結果(出力)を保存した状態でコミットしている。再実行する場合は
@@ -7849,7 +7851,7 @@ JPNB(Jupyter Notebook)方式で探索的データ分析(EDA)を行う。</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ad3a1c50">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b26367ff">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7882,7 +7884,7 @@ JPNB(Jupyter Notebook)方式で探索的データ分析(EDA)を行う。</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6d69c3f7">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3c1859bf">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7892,7 +7894,7 @@ JPNB(Jupyter Notebook)方式で探索的データ分析(EDA)を行う。</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=017d14db">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=c48df0e4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7939,7 +7941,7 @@ kyukei_y     rows= 13,671  crs=EPSG:4326
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=54979802">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8c74812a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7949,7 +7951,7 @@ kyukei_y     rows= 13,671  crs=EPSG:4326
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=722ec057">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=12d38126">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8063,7 +8065,7 @@ kyukei_y     rows= 13,671  crs=EPSG:4326
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2f02bcb5">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=26c4ce88">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8073,7 +8075,7 @@ kyukei_y     rows= 13,671  crs=EPSG:4326
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=c5558ca5">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=eed14f70">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8119,14 +8121,20 @@ dtype: int64
 --- kyukei_r ---
 SHOZAICHI    1
 dtype: int64
---- kyukei_y: 欠損なし ---
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>--- kyukei_y: 欠損なし ---
 </pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2a568e17">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2b2c7eac">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8138,7 +8146,7 @@ dtype: int64
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ae09bdaa">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6780c31a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8148,7 +8156,7 @@ dtype: int64
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8261331c">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ab67f806">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8196,7 +8204,7 @@ kyukei_y     invalid=     2 /  13,671
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5eb00133">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6b51f208">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8206,7 +8214,7 @@ kyukei_y     invalid=     2 /  13,671
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=729da3bd">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fd958bde">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8241,7 +8249,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=38c960be">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d0f2c136">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8252,7 +8260,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=89e62460">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=50ffe6f5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8291,7 +8299,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=93c5f565">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b0532d96">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8462,7 +8470,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=68e64882">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0c70f603">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8475,7 +8483,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=db6512cb">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=76c025dd">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8486,7 +8494,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=7c894ed2">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ac7423ef">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8564,7 +8572,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=0ad9c3fd">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8162da68">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8597,7 +8605,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f6fd09fe">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e614d137">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8610,7 +8618,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ae54f0e0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=299d3d45">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8622,7 +8630,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a18ecb93">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=2f771af1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8714,7 +8722,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9a7513a0">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=e4498fa7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8750,7 +8758,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9f3bba9c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=193abede">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8763,7 +8771,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=14c45ead">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=42414903">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8773,7 +8781,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=61e6df73">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d69a4032">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8821,7 +8829,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=5cee861f">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=1b8c1ed1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8857,7 +8865,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=97118bcb">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=210d18bb">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8870,18 +8878,18 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=853fafc9">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0155fa92">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="10.-%E7%A9%BA%E9%96%93%E5%88%86%E5%B8%83%E3%81%AE%E5%8F%AF%E8%A6%96%E5%8C%96(%E5%9C%B0%E5%9B%B3)">10. 空間分布の可視化(地図)<a class="anchor-link" href="#10.-%E7%A9%BA%E9%96%93%E5%88%86%E5%B8%83%E3%81%AE%E5%8F%AF%E8%A6%96%E5%8C%96(%E5%9C%B0%E5%9B%B3)">¶</a></h2><p>東京都は伊豆諸島・小笠原諸島を含むため、行政区域(<code>area</code>)の範囲は広大(北緯26°〜36°)。
+<h2 id="10.-%E7%A9%BA%E9%96%93%E5%88%86%E5%B8%83%E3%81%AE%E5%8F%AF%E8%A6%96%E5%8C%96(%E5%9C%B0%E5%9B%B3)">10. 空間分布の可視化(地図)<a class="anchor-link" href="#10.-%E7%A9%BA%E9%96%93%E5%88%86%E5%B8%83%E3%81%AE%E5%8F%AF%E8%A6%96%E5%8C%96(%E5%9C%B0%E5%9B%B3)">¶</a></h2><p>東京都は伊豆諸島・小笠原諸島を含むため、監視対象地区(<code>area</code>)の分布範囲は広大(北緯26°〜36°)。
 ここでは本土部(23区・多摩地域)に絞って警戒区域の分布を重ね合わせる。</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=e7548a7c">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=029bff0f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8934,7 +8942,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cf846394">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6537fdc2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8946,18 +8954,18 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c63998e6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f3d2b1d7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="11.-%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5%E3%83%87%E3%83%BC%E3%82%BF(mesh)%E5%88%86%E6%9E%90">11. メッシュデータ(mesh)分析<a class="anchor-link" href="#11.-%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5%E3%83%87%E3%83%BC%E3%82%BF(mesh)%E5%88%86%E6%9E%90">¶</a></h2><p><code>mesh</code> レイヤは 166,400 件と最も件数が多く、<code>AREA_ID</code> で <code>area</code> レイヤと
+<h2 id="11.-%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5%E3%83%87%E3%83%BC%E3%82%BF(mesh)%E5%88%86%E6%9E%90">11. メッシュデータ(mesh)分析<a class="anchor-link" href="#11.-%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5%E3%83%87%E3%83%BC%E3%82%BF(mesh)%E5%88%86%E6%9E%90">¶</a></h2><p><code>mesh</code> レイヤは 166,400 件と最も件数が多く、<code>AREA_ID</code> で <code>area</code>(監視対象地区)レイヤと
 対応付けられている。<code>CL_JUDGE_F</code> は area・mesh 共通の判定フラグ属性。</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=c94413ce">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f6a18c46">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9003,7 +9011,7 @@ Name: count, dtype: int64
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=30d3c404">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9dab9d61">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9015,7 +9023,7 @@ Name: count, dtype: int64
 <span class="n">mesh_area_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">mesh</span><span class="p">[</span><span class="s2">"AREA_ID"</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
 <span class="n">area_area_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">area</span><span class="p">[</span><span class="s2">"AREA_ID"</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"area 側の区市町村数: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">area_area_ids</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"area 側の監視対象地区数: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">area_area_ids</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"mesh 側で参照される AREA_ID 数: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mesh_area_ids</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"area に存在しない AREA_ID を参照する mesh 件数: </span><span class="si">{</span><span class="p">(</span><span class="o">~</span><span class="n">mesh</span><span class="p">[</span><span class="s1">'AREA_ID'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">area_area_ids</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
@@ -9030,7 +9038,7 @@ Name: count, dtype: int64
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>area 側の区市町村数: 155
+<pre>area 側の監視対象地区数: 155
 mesh 側で参照される AREA_ID 数: 155
 area に存在しない AREA_ID を参照する mesh 件数: 164167
 </pre>
@@ -9038,7 +9046,7 @@ area に存在しない AREA_ID を参照する mesh 件数: 164167
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ed05b2cd">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a1a3bfee">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9070,13 +9078,13 @@ area に存在しない AREA_ID を参照する mesh 件数: 164167
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6b1c3e05">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d6f9d2ce">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>メッシュ数は各区市町村の行政区域の広さにほぼ比例する(奥多摩町・八王子市など
+<p>メッシュ数は各区市町村の面積の広さにほぼ比例する(奥多摩町・八王子市など
 面積の大きい市町村で件数が多い)。<code>CL_JUDGE_F</code> は <code>-1</code> が全体の 98.6% を占め、
 大半のメッシュでは値が未設定(-1)、ごく一部(2,233 件)にのみ 0/1/2 の
 判定値が入っている — 具体的な判定基準は本データ単体からは特定できないため、
@@ -9085,7 +9093,7 @@ area に存在しない AREA_ID を参照する mesh 件数: 164167
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=644d76b2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c19cb65b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9093,9 +9101,15 @@ area に存在しない AREA_ID を参照する mesh 件数: 164167
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="%E3%81%BE%E3%81%A8%E3%82%81(Key-Findings)">まとめ(Key Findings)<a class="anchor-link" href="#%E3%81%BE%E3%81%A8%E3%82%81(Key-Findings)">¶</a></h2><ul>
 <li>対象は東京都全域(62 区市町村、本土+伊豆諸島・小笠原諸島)の
-「土砂災害警戒区域等」オープンデータで、<code>area</code>(行政区域) / <code>mesh</code>(地図メッシュ) /
-<code>keikai_doseki</code>(土石流) / <code>keikai_jisuberi</code>(地滑り) / <code>keikai_kyukei</code>(急傾斜地の崩壊)
-の 5 データセット・計 7 レイヤ、ジオメトリ総数は約 30,200 件。</li>
+「東京都土砂災害危険度情報」GIS データ一式で、<code>area</code>(監視対象地区, 155件) /
+<code>mesh</code>(1km メッシュ) / <code>keikai_doseki</code>(土石流) / <code>keikai_jisuberi</code>(地滑り) /
+<code>keikai_kyukei</code>(急傾斜地の崩壊)の 5 データセット・計 7 レイヤ、
+ジオメトリ総数は約 30,200 件。都の公開カタログにある「土砂災害警戒区域・特別警戒区域」
+「1km メッシュ」「監視対象地区」の 3 データはいずれも今回の 5 ファイルに含まれており、
+別途取得が必要な新規データは無い。</li>
+<li><code>area</code> は当初「区市町村の行政区域」に見えたが、練馬区だけで 31 件など
+1 区市町村が複数件に分かれており、実体は区市町村を細分した「監視対象地区」
+(降雨時の危険度判定などに使う監視単位)であると判明した。</li>
 <li>主要属性(<code>KUBUN</code>, <code>GENSHONAME</code>, <code>KOKUJIDATE</code> 等)に欠損はなく、
 ジオメトリもすべて有効(invalid=0)。<code>SHOZAICHI</code> にのみわずかな欠損がある。</li>
 <li>件数では「急傾斜地の崩壊」警戒区域が最多で、次いで「土石流」、
