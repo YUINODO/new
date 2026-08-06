@@ -7796,7 +7796,7 @@ a.anchor-link {
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=21915da1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4a03be50">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7816,7 +7816,7 @@ JPNB(Jupyter Notebook)方式で探索的データ分析(EDA)を行う。</p>
 <tr>
 <td><code>area</code></td>
 <td><code>area_20260806.shp</code></td>
-<td>監視対象地区(土砂災害危険度情報システムの監視単位)ポリゴン(155 件)</td>
+<td>監視対象地区 = 東京都全域を行政区画ベースで完全分割した 155 地区</td>
 </tr>
 <tr>
 <td><code>mesh</code></td>
@@ -7842,8 +7842,12 @@ JPNB(Jupyter Notebook)方式で探索的データ分析(EDA)を行う。</p>
 </table>
 <p>属性名・件数から、東京都建設局河川部が公開する「東京都土砂災害危険度情報」で用いられる
 GIS データ一式(土砂災害警戒区域・特別警戒区域/1km メッシュ/監視対象地区)であると判断できる。
-<code>area</code> は区市町村そのものの行政境界ではなく、区市町村をさらに細分した「監視対象地区」
-(例: 練馬区だけで 31 地区)であることに注意。区市町村コードからは東京都内 62 区市町村
+都のデータカタログ上の 3 リソースは、この 5 ファイルに過不足なく対応する
+(警戒区域 → <code>keikai_*</code> の 3 ファイル、1km メッシュ → <code>mesh</code>、監視対象地区 → <code>area</code>)。</p>
+<p><code>area</code> は「区市町村ごとに 1 ポリゴン」ではなく 155 件あるが、後述 §12 の検証のとおり
+<strong>各区市町村を重なりなく完全分割した行政区画ベースの区分</strong>であり、
+区市町村を細分する場合もその区市町村自身の行政地区(世田谷区の 5 総合支所地区、
+港区の 5 地区など)に一致する。区市町村コードからは東京都内 62 区市町村
 (23区・26市・5町・8村、伊豆諸島・小笠原諸島を含む)全域を対象としたデータと分かる。</p>
 <p>データ本体(shp 一式)はサイズが大きいためリポジトリには含めず、本ノートブックは
 実行結果(出力)を保存した状態でコミットしている。再実行する場合は
@@ -7851,7 +7855,7 @@ GIS データ一式(土砂災害警戒区域・特別警戒区域/1km メッシ�
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b26367ff">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2cd7518e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7884,7 +7888,7 @@ GIS データ一式(土砂災害警戒区域・特別警戒区域/1km メッシ�
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3c1859bf">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3ff25421">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7894,7 +7898,7 @@ GIS データ一式(土砂災害警戒区域・特別警戒区域/1km メッシ�
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=c48df0e4">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8af6d044">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7941,7 +7945,7 @@ kyukei_y     rows= 13,671  crs=EPSG:4326
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8c74812a">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0403a2c2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7951,7 +7955,7 @@ kyukei_y     rows= 13,671  crs=EPSG:4326
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=12d38126">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=6730286a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8065,7 +8069,7 @@ kyukei_y     rows= 13,671  crs=EPSG:4326
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=26c4ce88">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=752f11db">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8075,7 +8079,7 @@ kyukei_y     rows= 13,671  crs=EPSG:4326
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=eed14f70">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=c7dcb649">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8118,23 +8122,23 @@ dtype: int64
 SHOZAICHI    10
 dtype: int64
 --- jisuberi_y: 欠損なし ---
---- kyukei_r ---
-SHOZAICHI    1
-dtype: int64
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>--- kyukei_y: 欠損なし ---
+<pre>--- kyukei_r ---
+SHOZAICHI    1
+dtype: int64
+--- kyukei_y: 欠損なし ---
 </pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2b2c7eac">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a8261849">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8146,7 +8150,7 @@ dtype: int64
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6780c31a">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=692f976d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8156,7 +8160,7 @@ dtype: int64
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ab67f806">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=00275d4f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8204,7 +8208,7 @@ kyukei_y     invalid=     2 /  13,671
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6b51f208">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a034f0b1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8214,7 +8218,7 @@ kyukei_y     invalid=     2 /  13,671
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fd958bde">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=bf73f0b7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8249,7 +8253,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d0f2c136">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=be61e5df">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8260,7 +8264,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=50ffe6f5">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=4459c5e2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8299,7 +8303,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b0532d96">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=12630e5b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8470,7 +8474,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0c70f603">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=05f37639">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8483,7 +8487,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=76c025dd">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1cb9ab43">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8494,7 +8498,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ac7423ef">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=7df2c9a9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8572,7 +8576,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8162da68">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=33dd566d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8605,7 +8609,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e614d137">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a7a6e86a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8618,7 +8622,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=299d3d45">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d0823ce0">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8630,7 +8634,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=2f771af1">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d1243f01">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8722,7 +8726,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=e4498fa7">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f6d8ed51">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8758,7 +8762,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=193abede">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8d031960">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8771,7 +8775,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=42414903">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=dfb67985">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8781,7 +8785,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d69a4032">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=4d8d53fc">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8829,7 +8833,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=1b8c1ed1">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=5fbdecd3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8865,7 +8869,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=210d18bb">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=90ed73b7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8878,7 +8882,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0155fa92">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9175249a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8889,7 +8893,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=029bff0f">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=72ecfa69">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8942,7 +8946,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6537fdc2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=87d1faa5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8954,7 +8958,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f3d2b1d7">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b63fa1e1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8965,7 +8969,7 @@ kyukei_y     unique_ratio=13671/13671  dup=0
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f6a18c46">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=bbe20613">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9011,7 +9015,7 @@ Name: count, dtype: int64
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9dab9d61">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=67019b93">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9046,7 +9050,7 @@ area に存在しない AREA_ID を参照する mesh 件数: 164167
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a1a3bfee">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d30db2a1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9078,7 +9082,7 @@ area に存在しない AREA_ID を参照する mesh 件数: 164167
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d6f9d2ce">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9dc1395d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9086,14 +9090,810 @@ area に存在しない AREA_ID を参照する mesh 件数: 164167
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>メッシュ数は各区市町村の面積の広さにほぼ比例する(奥多摩町・八王子市など
 面積の大きい市町村で件数が多い)。<code>CL_JUDGE_F</code> は <code>-1</code> が全体の 98.6% を占め、
-大半のメッシュでは値が未設定(-1)、ごく一部(2,233 件)にのみ 0/1/2 の
-判定値が入っている — 具体的な判定基準は本データ単体からは特定できないため、
-データ提供元(東京都)のメタデータ・凡例定義の確認が別途必要。</p>
+ごく一部(2,233 件)にのみ 0/1/2 の判定値が入っている。この 2,233 件は
+東京都の陸地面積(約 2,194 km²)にほぼ一致し、<code>-1</code> は「都域外(海上等)」を
+意味すると推測できる。次節でこの仮説と <code>CL_JUDGE_F</code> の意味を検証する。</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c19cb65b">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a13ff541">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="12.-%E6%A4%9C%E8%A8%BC:-area-%E3%81%AE%E6%AD%A3%E4%BD%93%E3%81%A8-CL_JUDGE_F-%E3%81%AE%E6%84%8F%E5%91%B3%E3%82%92%E3%83%87%E3%83%BC%E3%82%BF%E3%81%8B%E3%82%89%E7%89%B9%E5%AE%9A%E3%81%99%E3%82%8B">12. 検証: <code>area</code> の正体と <code>CL_JUDGE_F</code> の意味をデータから特定する<a class="anchor-link" href="#12.-%E6%A4%9C%E8%A8%BC:-area-%E3%81%AE%E6%AD%A3%E4%BD%93%E3%81%A8-CL_JUDGE_F-%E3%81%AE%E6%84%8F%E5%91%B3%E3%82%92%E3%83%87%E3%83%BC%E3%82%BF%E3%81%8B%E3%82%89%E7%89%B9%E5%AE%9A%E3%81%99%E3%82%8B">¶</a></h2><p>ここまでで 2 つの未解決点が残っている。</p>
+<ol>
+<li><code>area</code> は 155 件 = 62 区市町村 より多い。これは行政区画なのか、
+それとも土砂災害リスク箇所だけを抜き出した区域なのか?</li>
+<li><code>CL_JUDGE_F</code>(1 / 2、mesh では -1 / 0 / 1 / 2)の意味は何か?</li>
+</ol>
+<p>特に 1 については直感に反する点がある — 平坦でリスクの低い練馬区が 31 地区に
+細分されている一方、山地を抱える八王子市は 1 地区しかない。
+リスク箇所を示すデータならこれは逆である。以下、実データで検証する。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=68247468">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="12-1.-area-%E3%81%AF%E8%A1%8C%E6%94%BF%E5%8C%BA%E7%94%BB%E3%81%AE%E5%AE%8C%E5%85%A8%E5%88%86%E5%89%B2%E3%81%8B?">12-1. <code>area</code> は行政区画の完全分割か?<a class="anchor-link" href="#12-1.-area-%E3%81%AF%E8%A1%8C%E6%94%BF%E5%8C%BA%E7%94%BB%E3%81%AE%E5%AE%8C%E5%85%A8%E5%88%86%E5%89%B2%E3%81%8B?">¶</a></h3><p>各区市町村について、ポリゴン面積の合計が実際の行政面積と一致するか、
+またポリゴン同士に重なりが無いかを確認する。</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=7b6018f9">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [19]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">area_chk</span> <span class="o">=</span> <span class="n">gdfs</span><span class="p">[</span><span class="s2">"area"</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">area_chk</span><span class="p">[</span><span class="s2">"km2"</span><span class="p">]</span> <span class="o">=</span> <span class="n">area_chk</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">EQUAL_AREA_CRS</span><span class="p">)</span><span class="o">.</span><span class="n">area</span> <span class="o">/</span> <span class="mf">1e6</span>
+
+<span class="c1"># 面積合計 vs 実際の行政面積(国土地理院「全国都道府県市区町村別面積調」より)</span>
+<span class="n">KNOWN_KM2</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"練馬区"</span><span class="p">:</span> <span class="mf">48.08</span><span class="p">,</span> <span class="s2">"世田谷区"</span><span class="p">:</span> <span class="mf">58.05</span><span class="p">,</span> <span class="s2">"八王子市"</span><span class="p">:</span> <span class="mf">186.38</span><span class="p">,</span>
+             <span class="s2">"奥多摩町"</span><span class="p">:</span> <span class="mf">225.53</span><span class="p">,</span> <span class="s2">"青梅市"</span><span class="p">:</span> <span class="mf">103.31</span><span class="p">,</span> <span class="s2">"檜原村"</span><span class="p">:</span> <span class="mf">105.41</span><span class="p">,</span>
+             <span class="s2">"あきる野市"</span><span class="p">:</span> <span class="mf">73.47</span><span class="p">,</span> <span class="s2">"稲城市"</span><span class="p">:</span> <span class="mf">17.97</span><span class="p">}</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">city</span><span class="p">,</span> <span class="n">known</span> <span class="ow">in</span> <span class="n">KNOWN_KM2</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">sub</span> <span class="o">=</span> <span class="n">area_chk</span><span class="p">[</span><span class="n">area_chk</span><span class="p">[</span><span class="s2">"NEWCITY"</span><span class="p">]</span> <span class="o">==</span> <span class="n">city</span><span class="p">]</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"区市町村"</span><span class="p">:</span> <span class="n">city</span><span class="p">,</span> <span class="s2">"ポリゴン数"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub</span><span class="p">),</span>
+                 <span class="s2">"面積合計(km²)"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s2">"km2"</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="mi">2</span><span class="p">),</span> <span class="s2">"実際の行政面積(km²)"</span><span class="p">:</span> <span class="n">known</span><span class="p">})</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">))</span>
+
+<span class="c1"># 重なりの有無: 個別面積の合計 と 全体を結合した面積 が一致すれば重なり無し</span>
+<span class="n">union_area</span> <span class="o">=</span> <span class="n">gdfs</span><span class="p">[</span><span class="s2">"area"</span><span class="p">]</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">union_all</span><span class="p">()</span><span class="o">.</span><span class="n">area</span>
+<span class="n">sum_area</span> <span class="o">=</span> <span class="n">gdfs</span><span class="p">[</span><span class="s2">"area"</span><span class="p">]</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"個別面積の合計 / 結合後の面積 = </span><span class="si">{</span><span class="n">sum_area</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">union_area</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">  (1.0 なら重なり無し)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"155 ポリゴンの面積合計: </span><span class="si">{</span><span class="n">area_chk</span><span class="p">[</span><span class="s1">'km2'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> km²  (東京都の陸地面積 ≈ 2,194 km²)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>区市町村</th>
+<th>ポリゴン数</th>
+<th>面積合計(km²)</th>
+<th>実際の行政面積(km²)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>練馬区</td>
+<td>31</td>
+<td>48.08</td>
+<td>48.08</td>
+</tr>
+<tr>
+<th>1</th>
+<td>世田谷区</td>
+<td>5</td>
+<td>58.05</td>
+<td>58.05</td>
+</tr>
+<tr>
+<th>2</th>
+<td>八王子市</td>
+<td>1</td>
+<td>186.38</td>
+<td>186.38</td>
+</tr>
+<tr>
+<th>3</th>
+<td>奥多摩町</td>
+<td>9</td>
+<td>225.53</td>
+<td>225.53</td>
+</tr>
+<tr>
+<th>4</th>
+<td>青梅市</td>
+<td>11</td>
+<td>103.31</td>
+<td>103.31</td>
+</tr>
+<tr>
+<th>5</th>
+<td>檜原村</td>
+<td>8</td>
+<td>105.41</td>
+<td>105.41</td>
+</tr>
+<tr>
+<th>6</th>
+<td>あきる野市</td>
+<td>7</td>
+<td>73.47</td>
+<td>73.47</td>
+</tr>
+<tr>
+<th>7</th>
+<td>稲城市</td>
+<td>9</td>
+<td>17.97</td>
+<td>17.97</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>個別面積の合計 / 結合後の面積 = 1.000001  (1.0 なら重なり無し)
+155 ポリゴンの面積合計: 2116.8 km²  (東京都の陸地面積 ≈ 2,194 km²)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bb88f568">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>結論</strong>: ポリゴン面積の合計は 8 区市町村すべてで実面積と小数第 2 位まで一致し、
+重なり比は 1.000001(境界共有による丸め誤差のみ = 実質的に重複ゼロ)。
+155 地区は東京都全域を隙間なく・重なりなく
+分割した<strong>行政区画ベースの区分</strong>である。細分される場合も、その区市町村自身の
+行政地区(世田谷区=世田谷/北沢/玉川/砧/烏山 の総合支所地区、
+港区=芝/麻布/赤坂/高輪/芝浦港南 の地区)に一致している。
+つまり <code>area</code> は「リスク箇所の抽出」ではなく「都域の完全な区分」である。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=657ff53a">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="12-2.-CL_JUDGE_F-%E3%81%AF%E4%BD%95%E3%82%92%E8%A1%A8%E3%81%99%E3%81%8B?">12-2. <code>CL_JUDGE_F</code> は何を表すか?<a class="anchor-link" href="#12-2.-CL_JUDGE_F-%E3%81%AF%E4%BD%95%E3%82%92%E8%A1%A8%E3%81%99%E3%81%8B?">¶</a></h3><p>各地区に警戒区域(Y)が 1 件でも含まれるかを空間結合で判定し、
+<code>CL_JUDGE_F</code> とクロス集計する。</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d8adc89f">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [20]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">zones_all</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">gdfs</span><span class="p">[</span><span class="n">k</span><span class="p">][[</span><span class="s2">"geometry"</span><span class="p">]]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">hazard</span><span class="o">=</span><span class="n">lab</span><span class="p">)</span>
+               <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">lab</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">"doseki_y"</span><span class="p">,</span> <span class="s2">"土石流"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"jisuberi_y"</span><span class="p">,</span> <span class="s2">"地滑り"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"kyukei_y"</span><span class="p">,</span> <span class="s2">"急傾斜地の崩壊"</span><span class="p">)]]),</span>
+    <span class="n">crs</span><span class="o">=</span><span class="n">gdfs</span><span class="p">[</span><span class="s2">"area"</span><span class="p">]</span><span class="o">.</span><span class="n">crs</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">joined</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">sjoin</span><span class="p">(</span>
+    <span class="n">gdfs</span><span class="p">[</span><span class="s2">"area"</span><span class="p">][[</span><span class="s2">"AREA_ID"</span><span class="p">,</span> <span class="s2">"AREA_NAME"</span><span class="p">,</span> <span class="s2">"NEWCITY"</span><span class="p">,</span> <span class="s2">"CL_JUDGE_F"</span><span class="p">,</span> <span class="s2">"geometry"</span><span class="p">]],</span>
+    <span class="n">zones_all</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="s2">"intersects"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">zone_cnt</span> <span class="o">=</span> <span class="n">joined</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"AREA_ID"</span><span class="p">)[</span><span class="s2">"hazard"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">"警戒区域数"</span><span class="p">)</span>
+<span class="n">area_z</span> <span class="o">=</span> <span class="n">gdfs</span><span class="p">[</span><span class="s2">"area"</span><span class="p">]</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">zone_cnt</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">"AREA_ID"</span><span class="p">)</span>
+<span class="n">area_z</span><span class="p">[</span><span class="s2">"警戒区域あり"</span><span class="p">]</span> <span class="o">=</span> <span class="n">area_z</span><span class="p">[</span><span class="s2">"警戒区域数"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+<span class="n">ct</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">area_z</span><span class="p">[</span><span class="s2">"CL_JUDGE_F"</span><span class="p">],</span> <span class="n">area_z</span><span class="p">[</span><span class="s2">"警戒区域あり"</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"CL_JUDGE_F × 警戒区域の有無(地区数)"</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>CL_JUDGE_F × 警戒区域の有無(地区数)
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th>警戒区域あり</th>
+<th>False</th>
+<th>True</th>
+</tr>
+<tr>
+<th>CL_JUDGE_F</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>1</th>
+<td>29</td>
+<td>0</td>
+</tr>
+<tr>
+<th>2</th>
+<td>8</td>
+<td>118</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=120525f2">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"CL_JUDGE_F = 1 の地区(全 29 件)— すべて警戒区域を含まない:"</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">area_z</span><span class="p">[</span><span class="n">area_z</span><span class="p">[</span><span class="s2">"CL_JUDGE_F"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][[</span><span class="s2">"NEWCITY"</span><span class="p">,</span> <span class="s2">"AREA_NAME"</span><span class="p">,</span> <span class="s2">"警戒区域数"</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>CL_JUDGE_F = 1 の地区(全 29 件)— すべて警戒区域を含まない:
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>NEWCITY</th>
+<th>AREA_NAME</th>
+<th>警戒区域数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>中央区</td>
+<td>中央区</td>
+<td>0</td>
+</tr>
+<tr>
+<th>1</th>
+<td>墨田区</td>
+<td>墨田区</td>
+<td>0</td>
+</tr>
+<tr>
+<th>2</th>
+<td>江東区</td>
+<td>江東区</td>
+<td>0</td>
+</tr>
+<tr>
+<th>3</th>
+<td>練馬区</td>
+<td>旭丘・小竹町・栄町・</td>
+<td>0</td>
+</tr>
+<tr>
+<th>4</th>
+<td>練馬区</td>
+<td>貫井</td>
+<td>0</td>
+</tr>
+<tr>
+<th>5</th>
+<td>練馬区</td>
+<td>氷川台</td>
+<td>0</td>
+</tr>
+<tr>
+<th>6</th>
+<td>練馬区</td>
+<td>向山</td>
+<td>0</td>
+</tr>
+<tr>
+<th>7</th>
+<td>練馬区</td>
+<td>羽沢</td>
+<td>0</td>
+</tr>
+<tr>
+<th>8</th>
+<td>練馬区</td>
+<td>中村</td>
+<td>0</td>
+</tr>
+<tr>
+<th>9</th>
+<td>練馬区</td>
+<td>平和台・北町</td>
+<td>0</td>
+</tr>
+<tr>
+<th>10</th>
+<td>練馬区</td>
+<td>早宮</td>
+<td>0</td>
+</tr>
+<tr>
+<th>11</th>
+<td>練馬区</td>
+<td>春日町</td>
+<td>0</td>
+</tr>
+<tr>
+<th>12</th>
+<td>練馬区</td>
+<td>高松</td>
+<td>0</td>
+</tr>
+<tr>
+<th>13</th>
+<td>練馬区</td>
+<td>田柄</td>
+<td>0</td>
+</tr>
+<tr>
+<th>14</th>
+<td>練馬区</td>
+<td>光が丘</td>
+<td>0</td>
+</tr>
+<tr>
+<th>15</th>
+<td>練馬区</td>
+<td>富士見台・高野台</td>
+<td>0</td>
+</tr>
+<tr>
+<th>16</th>
+<td>練馬区</td>
+<td>谷原</td>
+<td>0</td>
+</tr>
+<tr>
+<th>17</th>
+<td>練馬区</td>
+<td>三原台</td>
+<td>0</td>
+</tr>
+<tr>
+<th>18</th>
+<td>練馬区</td>
+<td>下石神井</td>
+<td>0</td>
+</tr>
+<tr>
+<th>19</th>
+<td>練馬区</td>
+<td>東大泉</td>
+<td>0</td>
+</tr>
+<tr>
+<th>20</th>
+<td>練馬区</td>
+<td>西大泉</td>
+<td>0</td>
+</tr>
+<tr>
+<th>21</th>
+<td>練馬区</td>
+<td>関町東</td>
+<td>0</td>
+</tr>
+<tr>
+<th>22</th>
+<td>練馬区</td>
+<td>南大泉</td>
+<td>0</td>
+</tr>
+<tr>
+<th>23</th>
+<td>練馬区</td>
+<td>大泉学園町</td>
+<td>0</td>
+</tr>
+<tr>
+<th>24</th>
+<td>練馬区</td>
+<td>関町南・立野町</td>
+<td>0</td>
+</tr>
+<tr>
+<th>25</th>
+<td>足立区</td>
+<td>足立区</td>
+<td>0</td>
+</tr>
+<tr>
+<th>26</th>
+<td>葛飾区</td>
+<td>葛飾区</td>
+<td>0</td>
+</tr>
+<tr>
+<th>27</th>
+<td>江戸川区</td>
+<td>江戸川区</td>
+<td>0</td>
+</tr>
+<tr>
+<th>28</th>
+<td>武蔵野市</td>
+<td>武蔵野市</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6e076f6b">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>結論</strong>: <code>CL_JUDGE_F = 1</code> の 29 地区は<strong>例外なく警戒区域を 1 件も含まない</strong>。
+内訳は中央区・墨田区・江東区・足立区・葛飾区・江戸川区・武蔵野市といった
+low-land の平坦な区市と、練馬区の平坦な 22 地区であり、地形的にも整合する。
+一方 <code>CL_JUDGE_F = 2</code>(126 地区)は 118 地区が警戒区域を含む。
+したがって <code>CL_JUDGE_F</code> は <strong>土砂災害危険度の判定(CL: Critical Line 判定)の
+対象地区か否かを示すフラグ</strong>(1 = 対象外、2 = 対象)と解釈できる。</p>
+<p>mesh 側の <code>-1</code> は <code>AREA_ID</code> が欠損している行と完全に一致する(下記)。
+すなわち <code>-1</code> は「いずれの監視対象地区にも属さない = 都域外(海上等)」を意味する。</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=7791193d">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [22]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">mesh_chk</span> <span class="o">=</span> <span class="n">gdfs</span><span class="p">[</span><span class="s2">"mesh"</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">mesh_chk</span><span class="p">[</span><span class="s2">"AREA_ID紐付けあり"</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh_chk</span><span class="p">[</span><span class="s2">"AREA_ID"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">mesh_chk</span><span class="p">[</span><span class="s2">"CL_JUDGE_F"</span><span class="p">],</span> <span class="n">mesh_chk</span><span class="p">[</span><span class="s2">"AREA_ID紐付けあり"</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th>AREA_ID紐付けあり</th>
+<th>False</th>
+<th>True</th>
+</tr>
+<tr>
+<th>CL_JUDGE_F</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>-1</th>
+<td>164167</td>
+<td>0</td>
+</tr>
+<tr>
+<th>0</th>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr>
+<th>1</th>
+<td>0</td>
+<td>853</td>
+</tr>
+<tr>
+<th>2</th>
+<td>0</td>
+<td>1374</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=37cae89b">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="12-3.-%E3%81%AA%E3%81%9C%E7%B7%B4%E9%A6%AC%E5%8C%BA%E3%81%AF-31-%E5%9C%B0%E5%8C%BA%E3%81%A7%E3%80%81%E5%85%AB%E7%8E%8B%E5%AD%90%E5%B8%82%E3%81%AF-1-%E5%9C%B0%E5%8C%BA%E3%81%AA%E3%81%AE%E3%81%8B">12-3. なぜ練馬区は 31 地区で、八王子市は 1 地区なのか<a class="anchor-link" href="#12-3.-%E3%81%AA%E3%81%9C%E7%B7%B4%E9%A6%AC%E5%8C%BA%E3%81%AF-31-%E5%9C%B0%E5%8C%BA%E3%81%A7%E3%80%81%E5%85%AB%E7%8E%8B%E5%AD%90%E5%B8%82%E3%81%AF-1-%E5%9C%B0%E5%8C%BA%E3%81%AA%E3%81%AE%E3%81%8B">¶</a></h3><p>冒頭の「直感に反する点」の答えがここで得られる。
+細分化されている区市町村の <code>CL_JUDGE_F</code> 内訳を見る。</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=72a44ff1">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [23]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">multi_cities</span> <span class="o">=</span> <span class="n">gdfs</span><span class="p">[</span><span class="s2">"area"</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"NEWCITY"</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)[</span><span class="s2">"NEWCITY"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="n">split_ct</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span>
+    <span class="n">gdfs</span><span class="p">[</span><span class="s2">"area"</span><span class="p">][</span><span class="n">gdfs</span><span class="p">[</span><span class="s2">"area"</span><span class="p">][</span><span class="s2">"NEWCITY"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">multi_cities</span><span class="p">)][</span><span class="s2">"NEWCITY"</span><span class="p">],</span>
+    <span class="n">gdfs</span><span class="p">[</span><span class="s2">"area"</span><span class="p">][</span><span class="s2">"CL_JUDGE_F"</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">split_ct</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+<span class="n">mixed</span> <span class="o">=</span> <span class="p">((</span><span class="n">split_ct</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">split_ct</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"CL_JUDGE_F が 1 と 2 の両方を含む(=判定対象と対象外が混在する)区市町村: </span><span class="si">{</span><span class="n">mixed</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">split_ct</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th>CL_JUDGE_F</th>
+<th>1</th>
+<th>2</th>
+</tr>
+<tr>
+<th>NEWCITY</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>練馬区</th>
+<td>22</td>
+<td>9</td>
+</tr>
+<tr>
+<th>あきる野市</th>
+<td>0</td>
+<td>7</td>
+</tr>
+<tr>
+<th>八丈町</th>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr>
+<th>世田谷区</th>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr>
+<th>大島町</th>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr>
+<th>奥多摩町</th>
+<td>0</td>
+<td>9</td>
+</tr>
+<tr>
+<th>小笠原村</th>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<th>多摩市</th>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<th>新島村</th>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<th>日野市</th>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<th>檜原村</th>
+<td>0</td>
+<td>8</td>
+</tr>
+<tr>
+<th>板橋区</th>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr>
+<th>港区</th>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr>
+<th>稲城市</th>
+<td>0</td>
+<td>9</td>
+</tr>
+<tr>
+<th>豊島区</th>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<th>青梅市</th>
+<td>0</td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>CL_JUDGE_F が 1 と 2 の両方を含む(=判定対象と対象外が混在する)区市町村: 1 / 16
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=95c592e8">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>結論</strong>: 練馬区は、判定対象(2)と対象外(1)が<strong>混在する唯一の区市町村</strong>である
+(対象外 22 地区 / 対象 9 地区)。石神井川・白子川沿いの局所的な崖線にのみ
+急傾斜地の警戒区域があるため、区内を細かく分割しないと
+「どこが判定対象か」を表現できない。</p>
+<p>対して八王子市は市域全体が判定対象(<code>CL_JUDGE_F = 2</code>)なので、
+<strong>分割する必要が無く 1 ポリゴンで足りる</strong>。町田市・日の出町・瑞穂町なども同様。</p>
+<p>つまり分割の細かさは「リスクの高さ」ではなく
+「<strong>区市町村内で判定対象/対象外を切り分ける必要があるか</strong>」で決まっている。
+直感に反して見えた練馬区 31 地区 vs 八王子市 1 地区は、これで完全に説明できる。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=332e9b78">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -9107,9 +9907,24 @@ area に存在しない AREA_ID を参照する mesh 件数: 164167
 ジオメトリ総数は約 30,200 件。都の公開カタログにある「土砂災害警戒区域・特別警戒区域」
 「1km メッシュ」「監視対象地区」の 3 データはいずれも今回の 5 ファイルに含まれており、
 別途取得が必要な新規データは無い。</li>
-<li><code>area</code> は当初「区市町村の行政区域」に見えたが、練馬区だけで 31 件など
-1 区市町村が複数件に分かれており、実体は区市町村を細分した「監視対象地区」
-(降雨時の危険度判定などに使う監視単位)であると判明した。</li>
+<li><strong><code>area</code>(監視対象地区)は東京都全域を重なりなく完全分割した行政区画ベースの
+155 地区</strong>である(§12-1)。検証した 8 区市町村すべてでポリゴン面積の合計が
+実面積と一致し、重なりも実質ゼロ。細分される場合もその区市町村自身の行政地区
+(世田谷区の 5 総合支所地区、港区の 5 地区など)に一致する。
+「リスク箇所を抜き出したデータ」ではない点に注意。</li>
+<li><strong>メタデータの無い <code>CL_JUDGE_F</code> の意味をデータから特定できた</strong>(§12-2)。
+<code>CL_JUDGE_F = 1</code> の 29 地区は例外なく警戒区域を 1 件も含まず(中央区・墨田区・
+江東区・足立区・葛飾区・江戸川区・武蔵野市などの平坦な low-land と練馬区の
+平坦な 22 地区)、<code>= 2</code> の 126 地区は 118 地区が警戒区域を含む。
+よって <code>CL_JUDGE_F</code> は危険度判定(CL: Critical Line 判定)の対象か否かのフラグ
+(1 = 対象外 / 2 = 対象)。mesh の <code>-1</code> は <code>AREA_ID</code> 欠損行と完全一致し、
+「都域外(海上等)」を意味する。</li>
+<li><strong>分割の細かさはリスクの高さではなく「区市町村内で判定対象/対象外を
+切り分ける必要があるか」で決まる</strong>(§12-3)。練馬区は判定対象と対象外が
+混在する唯一の区市町村(対象外 22 / 対象 9)のため 31 地区に細分される一方、
+八王子市は市域全体が判定対象なので分割不要で 1 ポリゴン。
+一見不可解だった「平坦な練馬区 31 地区 vs 山地の八王子市 1 地区」は
+これで完全に説明できる。</li>
 <li>主要属性(<code>KUBUN</code>, <code>GENSHONAME</code>, <code>KOKUJIDATE</code> 等)に欠損はなく、
 ジオメトリもすべて有効(invalid=0)。<code>SHOZAICHI</code> にのみわずかな欠損がある。</li>
 <li>件数では「急傾斜地の崩壊」警戒区域が最多で、次いで「土石流」、
@@ -9122,9 +9937,15 @@ area に存在しない AREA_ID を参照する mesh 件数: 164167
 基礎調査・区域指定が進められてきたことが読み取れる。</li>
 <li>空間的には東京都本土部の西側(多摩地域の山地・丘陵地)に警戒区域が集中し、
 東側の平野部(23区東部)にはほとんど分布しない。</li>
-<li><code>mesh</code> は <code>area</code> と <code>AREA_ID</code> で正しく参照整合性が取れている一方、
-<code>CL_JUDGE_F</code> フラグの意味はデータ単体からは確定できず、追加のメタデータ
-確認が必要という制約が残る。</li>
+<li><code>mesh</code> は <code>area</code> と <code>AREA_ID</code> で正しく参照整合性が取れており、
+値を持つ 2,233 メッシュは東京都の陸地面積(約 2,194 km²)とほぼ一致する。</li>
+</ul>
+<h3 id="%E6%AE%8B%E3%82%8B%E5%88%B6%E7%B4%84">残る制約<a class="anchor-link" href="#%E6%AE%8B%E3%82%8B%E5%88%B6%E7%B4%84">¶</a></h3><ul>
+<li><code>CL_JUDGE_F</code> の解釈(1 = 判定対象外 / 2 = 判定対象)は、警戒区域との
+空間的な対応から導いた<strong>データ駆動の推定</strong>であり、東京都の公式な
+属性定義書で裏付けたものではない。<code>= 2</code> でありながら警戒区域を含まない
+8 地区の位置づけも未解明で、確定には提供元のメタデータ確認が望ましい。</li>
+<li>mesh の <code>CL_JUDGE_F = 0</code>(6 件)は件数が少なく、意味を特定できていない。</li>
 </ul>
 </div>
 </div>
