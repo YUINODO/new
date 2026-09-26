@@ -38,10 +38,17 @@ export class MotionSensor {
         "このページではカメラを使えません。http://localhost:3000 で開いているか確認してください（http://172.… などのアドレスでは使えません）。",
       );
     }
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { width: 320, height: 240, facingMode: "user" },
-      audio: false,
-    });
+    let stream: MediaStream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 320, height: 240, facingMode: "user" },
+        audio: false,
+      });
+    } catch (error) {
+      // 解像度の指定に対応できないカメラもあるので、条件なしでもう一度だけ試す
+      if (!(error instanceof DOMException) || error.name === "NotAllowedError") throw error;
+      stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    }
     const video = document.createElement("video");
     video.muted = true;
     video.playsInline = true;
