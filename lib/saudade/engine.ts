@@ -6,6 +6,8 @@
  * 再び現れる形は、いつも少しだけ違う。
  */
 
+import type { MemoryVeil } from "./memory";
+
 type Rgb = readonly [number, number, number];
 
 const WARM_PALETTE: readonly Rgb[] = [
@@ -179,6 +181,7 @@ export class SaudadeEngine {
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
   private readonly sprites: HTMLCanvasElement[];
+  private readonly veil: MemoryVeil | null;
 
   private width = 0;
   private height = 0;
@@ -210,8 +213,9 @@ export class SaudadeEngine {
   private recede = 0;
   private blowTime = 0;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, veil: MemoryVeil | null = null) {
     this.canvas = canvas;
+    this.veil = veil;
     this.ctx = canvas.getContext("2d")!;
     this.sprites = WARM_PALETTE.map(makeSprite);
   }
@@ -222,6 +226,7 @@ export class SaudadeEngine {
     this.dpr = Math.min(dpr, 2);
     this.canvas.width = Math.round(width * this.dpr);
     this.canvas.height = Math.round(height * this.dpr);
+    this.veil?.resize(width, height, dpr);
     this.ctx.fillStyle = "#000";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -257,6 +262,22 @@ export class SaudadeEngine {
     const dt = this.lastFrame ? Math.min((now - this.lastFrame) / 1000, 1 / 30) : 1 / 60;
     this.lastFrame = now;
     this.step(dt);
+    if (this.veil) {
+      const f = this.form;
+      this.veil.render(
+        dt,
+        this.time,
+        {
+          x: f?.cx ?? this.width / 2,
+          y: f?.cy ?? this.height / 2,
+          radius: f?.radius ?? Math.min(this.width, this.height) * 0.3,
+          // 人がそこにいる間だけ、記憶は照らされる。消えたあとは温もりの分だけ
+          intensity: this.presence + this.residue * 0.5,
+        },
+        this.smoothHand.strength > 0.01 ? this.smoothHand : null,
+        this.blow,
+      );
+    }
     this.render();
   }
 
@@ -356,6 +377,7 @@ export class SaudadeEngine {
     this.calm = 0;
     this.dwell = 0;
     this.residue = 1;
+    this.veil?.erode(x, y);
   }
 
   private step(dt: number) {

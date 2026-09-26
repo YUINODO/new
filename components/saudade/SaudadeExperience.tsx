@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SaudadeEngine } from "@/lib/saudade/engine";
+import { MemoryVeil } from "@/lib/saudade/memory";
 import { MotionSensor } from "@/lib/saudade/motion";
 import { VoiceSensor } from "@/lib/saudade/voice";
 
@@ -14,6 +15,7 @@ const CONTROLS_ZONE = 160;
 
 export default function SaudadeExperience() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const veilRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<SaudadeEngine | null>(null);
   const sensorRef = useRef<MotionSensor | null>(null);
   const voiceRef = useRef<VoiceSensor | null>(null);
@@ -26,9 +28,10 @@ export default function SaudadeExperience() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const veilCanvas = veilRef.current;
+    if (!canvas || !veilCanvas) return;
 
-    const engine = new SaudadeEngine(canvas);
+    const engine = new SaudadeEngine(canvas, new MemoryVeil(veilCanvas));
     engineRef.current = engine;
 
     const resize = () => engine.resize(window.innerWidth, window.innerHeight, window.devicePixelRatio || 1);
@@ -175,7 +178,9 @@ export default function SaudadeExperience() {
       onPointerLeave={onPointerLeave}
       onPointerDown={onPointerDown}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden />
+      {/* 奥：記憶の映る和紙 / 手前：光の人（スクリーン合成で重ねる）*/}
+      <canvas ref={veilRef} className="absolute inset-0 h-full w-full" aria-hidden />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full mix-blend-screen" aria-hidden />
       {/* キャンバスの純粋な黒に、夜の色味をのせる */}
       <div className="pointer-events-none absolute inset-0 bg-[rgb(4,3,8)] mix-blend-lighten" aria-hidden />
       <h1 className="sr-only">saudade — 触れようとすると消える光</h1>
