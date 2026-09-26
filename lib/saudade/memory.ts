@@ -1,20 +1,27 @@
 /**
  * 記憶の帳（とばり）— 光の人の背後に吊るされた和紙。
  *
+ * 紙は左右の壁となって、回廊の奥まで幾層にも連なる。
  * 夕暮れの部屋の記憶が、何枚もの紙に分かれて透けている。
  * 誰かが消えるたび、近くの紙から記憶が霧のように抜け落ちる。
  * しばらくすると像はまた浮かぶが、それはもう、少しずれた別の断片になっている。
  */
 
-import type { Hand } from "./engine";
+import { project, type Camera, type Hand } from "./engine";
 
-export type Light = { x: number; y: number; radius: number; intensity: number };
+/** 光の人。奥行き z に立ち、まわりの紙を照らす。warmth は記憶の温度（1 → 0）*/
+export type Light = { x: number; y: number; z: number; radius: number; intensity: number; warmth: number };
 
 type Sheet = {
+  /** 回廊の中での位置（上辺の中央）。z は奥行き */
   x: number;
   y: number;
+  z: number;
   w: number;
   h: number;
+  /** 直近の描画での画面上の中心 */
+  px: number;
+  py: number;
   /** 映っている記憶の断片（シーン上の位置）*/
   sx: number;
   sy: number;
@@ -27,6 +34,10 @@ type Sheet = {
   spin: number;
   phase: number;
   paper: number;
+  /** 紙と記憶を重ねた絵。記憶の濃さが変わったときだけ描き直す */
+  cache: HTMLCanvasElement | null;
+  cacheKey: number;
+  layer: number;
 };
 
 const BG = "rgb(4, 3, 8)";
@@ -285,10 +296,13 @@ export class MemoryVeil {
   private width = 0;
   private height = 0;
   private dpr = 1;
+  /** 奥から手前の順に並べておく（奥から描く）*/
   private sheets: Sheet[] = [];
-  private columns: number[] = [];
-  private region = { x: 0, y: 0, w: 0, h: 0 };
+  private threads: { x: number; z: number; top: number }[] = [];
   private floorY = 0;
+  private sceneW = 1;
+  private sceneH = 1;
+  private lightZ = 0;
   private lastHand: { x: number; y: number } | null = null;
 
   constructor(canvas: HTMLCanvasElement) {
@@ -298,74 +312,86 @@ export class MemoryVeil {
     this.fog = paintFog();
   }
 
-  resize(width: number, height: number, dpr: number) {
+  resize(width: number, height: number, dpr: number, cam: Camera) {
     this.width = width;
     this.height = height;
-    this.dpr = Math.min(dpr, 1.5);
+    this.dpr = 1;
     this.canvas.width = Math.round(width * this.dpr);
     this.canvas.height = Math.round(height * this.dpr);
 
     const portrait = height > width;
-    const r = {
-      x: width * 0.05,
-      y: height * 0.05,
-      w: width * 0.9,
-      h: height * (portrait ? 0.7 : 0.74),
-    };
-    this.region = r;
-    this.floorY = r.y + r.h;
-    this.scene = paintRoom(r.w, r.h, this.rand);
-
-    const gap = Math.max(4, width * 0.0045);
-    let cols = Math.max(4, Math.round(r.w / 105));
-    // 横長の画面では、真ん中に通り道を空ける（光の人が立つ場所）
-    const aisle = !portrait && cols >= 6;
-    if (aisle && cols % 2 === 0) cols += 1;
-    const sw = (r.w - gap * (cols - 1)) / cols;
+    const cx = width / 2;
+    this.floorY = height * 0.92;
+    // 回廊。中央に人の通る道があり、左右の壁が奥へ連なる
+    const aisle = width * (portrait ? 0.2 : 0.12);
+    const outer = width * (portrait ? 0.75 : 0.62);
+    const sw = Math.max(40, Math.min(width, height * 1.4) * 0.075);
     const sh = sw / 0.72;
-    const rows = Math.max(2, Math.floor((r.h + gap) / (sh + gap)));
-    const top = r.y + r.h - rows * (sh + gap) + gap;
+    const gap = sw * 0.09;
+    const cols = Math.max(2, Math.floor((outer - aisle) / (sw + gap)));
+    const rows = Math.max(3, Math.floor((this.floorY - height * 0.04) / (sh + gap)));
+    const top = this.floorY - rows * (sh + gap);
+    const layers = portrait ? 4 : 5;
+
+    this.sceneW = outer * 2;
+    this.sceneH = this.floorY;
+    this.scene = paintRoom(this.sceneW, this.sceneH, this.rand);
 
     this.sheets = [];
-    this.columns = [];
-    for (let i = 0; i < cols; i++) {
-      if (aisle && i === (cols - 1) / 2) continue;
-      const x = r.x + i * (sw + gap);
-      this.columns.push(x + sw / 2);
-      for (let j = 0; j < rows; j++) {
-        // 手漉きの紙は、一枚ずつ大きさも吊られ方も少し違う
-        const k = 0.86 + this.rand() * 0.14;
-        const w = sw * k;
-        const h = sh * (0.86 + this.rand() * 0.14);
-        const y = top + j * (sh + gap) + (this.rand() - 0.5) * gap;
-        this.sheets.push({
-          x: x + (sw - w) / 2 + (this.rand() - 0.5) * gap,
-          y,
-          w,
-          h,
-          sx: x - r.x,
-          sy: y - r.y,
-          memory: 0,
-          target: 1,
-          blank: 0,
-          mist: 0,
-          angle: 0,
-          tilt: (this.rand() - 0.5) * 0.05,
-          spin: 0,
-          phase: this.rand() * Math.PI * 2,
-          paper: Math.floor(this.rand() * this.papers.length),
-        });
+    this.threads = [];
+    for (let l = layers - 1; l >= 0; l--) {
+      const z = cam.depth * (0.08 + l * 0.42);
+      // 奥の層ほど、別の記憶の断片が映っている
+      const shift = (l * 0.23 * this.sceneW) % this.sceneW;
+      for (const side of [-1, 1]) {
+        for (let i = 0; i < cols; i++) {
+          const x = cx + side * (aisle + sw / 2 + i * (sw + gap));
+          this.threads.push({ x, z, top });
+          for (let j = 0; j < rows; j++) {
+            // 手漉きの紙は、一枚ずつ大きさも吊られ方も少し違う
+            const w = sw * (0.86 + this.rand() * 0.14);
+            const h = sh * (0.86 + this.rand() * 0.14);
+            const y = top + j * (sh + gap) + (this.rand() - 0.5) * gap;
+            const sx = (((x - w / 2 - (cx - outer)) + shift) % (this.sceneW - w) + (this.sceneW - w)) % (this.sceneW - w);
+            this.sheets.push({
+              x: x + (this.rand() - 0.5) * gap,
+              y,
+              z: z + (this.rand() - 0.5) * sw * 0.8,
+              w,
+              h,
+              px: 0,
+              py: 0,
+              sx,
+              sy: Math.min(Math.max(0, y), this.sceneH - h),
+              memory: 0,
+              target: 1,
+              blank: 0,
+              mist: 0,
+              angle: 0,
+              tilt: (this.rand() - 0.5) * 0.05,
+              spin: 0,
+              phase: this.rand() * Math.PI * 2,
+              paper: Math.floor(this.rand() * this.papers.length),
+              cache: null,
+              cacheKey: -1,
+              layer: l,
+            });
+          }
+        }
       }
     }
   }
 
-  /** 誰かが消えた。その近くの紙から、記憶が抜け落ちる。*/
+  /** 誰かが消えた。その人が立っていた奥行きの紙から、記憶が抜け落ちる。*/
   erode(x: number, y: number) {
     const ranked = this.sheets
       .filter((s) => s.target > 0)
-      .map((s) => ({ s, d: Math.hypot(s.x + s.w / 2 - x, s.y + s.h / 2 - y) * (0.6 + this.rand() * 0.8) }))
+      .map((s) => ({
+        s,
+        d: (Math.hypot(s.px - x, s.py - y) + Math.abs(s.z - this.lightZ) * 0.6) * (0.6 + this.rand() * 0.8),
+      }))
       .sort((a, b) => a.d - b.d);
-    const count = Math.ceil(this.sheets.length * (0.18 + this.rand() * 0.12));
+    const count = Math.ceil(this.sheets.length * (0.12 + this.rand() * 0.08));
     for (const { s } of ranked.slice(0, count)) {
       s.target = 0;
       s.mist = 1;
@@ -374,10 +400,11 @@ export class MemoryVeil {
     }
   }
 
-  render(dt: number, t: number, light: Light, hand: Hand | null, blow: number) {
+  render(dt: number, t: number, cam: Camera, light: Light, hand: Hand | null, blow: number) {
     const ctx = this.ctx;
     const dpr = this.dpr;
     const scene = this.scene;
+    this.lightZ = light.z;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = "source-over";
@@ -385,6 +412,15 @@ export class MemoryVeil {
     ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     if (!scene) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // 回廊の果て。人が去っていく先に、かすかな明かりがある
+    const end = project(cam, this.width / 2, this.floorY - this.height * 0.3, cam.depth * 3.2);
+    const endR = this.height * 0.5 * end.s + this.height * 0.08;
+    const glow = ctx.createRadialGradient(end.x, end.y, 0, end.x, end.y, endR);
+    glow.addColorStop(0, `rgba(210, 180, 150, ${0.07 + 0.02 * Math.sin(t * 0.2)})`);
+    glow.addColorStop(1, "rgba(210, 180, 150, 0)");
+    ctx.fillStyle = glow;
+    ctx.fillRect(end.x - endR, end.y - endR, endR * 2, endR * 2);
 
     // 手が動くと、その風で紙が揺れる
     let hvx = 0;
@@ -395,88 +431,116 @@ export class MemoryVeil {
       this.lastHand = null;
     }
 
-    // 吊り糸
-    ctx.strokeStyle = "rgba(210, 190, 160, 0.05)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    for (const x of this.columns) {
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, this.floorY);
-    }
-    ctx.stroke();
-
     for (const s of this.sheets) {
       // 抜け落ちた記憶は、しばらくして別の断片として浮かびなおす
       if (s.target === 0 && s.memory < 0.01) {
         s.blank -= dt;
         if (s.blank <= 0) {
-          s.sx = Math.min(Math.max(0, s.sx + (this.rand() - 0.5) * s.w * 2.5), this.region.w - s.w);
-          s.sy = Math.min(Math.max(0, s.sy + (this.rand() - 0.5) * s.h * 1.5), this.region.h - s.h);
+          s.sx = Math.min(Math.max(0, s.sx + (this.rand() - 0.5) * s.w * 2.5), this.sceneW - s.w);
+          s.sy = Math.min(Math.max(0, s.sy + (this.rand() - 0.5) * s.h * 1.5), this.sceneH - s.h);
           s.target = 1;
+          s.cacheKey = -1;
         }
       }
       const rate = s.target > s.memory ? dt / 14 : dt / 2.5;
       s.memory += Math.max(-rate, Math.min(rate, s.target - s.memory));
       s.mist = Math.max(0, s.mist - dt / 4);
 
-      const cx = s.x + s.w / 2;
-      const cy = s.y + s.h / 2;
       let push = blow * Math.sin(t * 7 + s.phase) * 3;
       if (hand && hand.strength > 0.01) {
-        const d2 = (cx - hand.x) ** 2 + (cy - hand.y) ** 2;
+        const d2 = (s.px - hand.x) ** 2 + (s.py - hand.y) ** 2;
         push += hvx * 0.0035 * Math.exp(-d2 / (2 * 170 * 170)) * hand.strength;
       }
       s.spin += (-s.angle * 7 - s.spin * 1.6 + push) * dt;
       s.angle += s.spin * dt;
     }
 
-    const reach = Math.min(light.radius * 2.4, Math.max(this.width, this.height) * 0.42);
+    const reach = light.radius * 2.6;
+    const memoryTone = 0.45 + 0.55 * light.warmth;
     const lit = (s: Sheet) => {
-      const d = Math.hypot(s.x + s.w / 2 - light.x, s.y + s.h / 2 - light.y) / reach;
+      const d = Math.hypot(s.x - light.x, s.y + s.h / 2 - light.y, (s.z - light.z) * 0.8) / reach;
       // 光の人に照らされた紙だけが、記憶を浮かびあがらせる
       return 0.1 + light.intensity * 1.35 * Math.max(0, 1 - d * d);
     };
 
-    const drawSheets = (alphaScale: number) => {
-      for (const s of this.sheets) {
-        const l = lit(s) * alphaScale;
-        const angle = s.tilt + s.angle + Math.sin(t * 0.5 + s.phase) * 0.012;
-        ctx.save();
-        ctx.translate(s.x + s.w / 2, s.y);
-        ctx.rotate(angle);
-        ctx.globalAlpha = Math.min(1, 0.17 * l);
-        ctx.drawImage(this.papers[s.paper], -s.w / 2, 0, s.w, s.h);
-        if (s.memory > 0.01) {
-          ctx.globalAlpha = Math.min(1, 0.62 * l * s.memory);
-          ctx.drawImage(scene, s.sx, s.sy, s.w, s.h, -s.w / 2, 0, s.w, s.h);
-        }
-        if (s.mist > 0.01) {
-          ctx.globalCompositeOperation = "lighter";
-          ctx.globalAlpha = s.mist * s.mist * 0.35 * l;
-          ctx.drawImage(this.fog, -s.w, -s.h * 0.2 - (1 - s.mist) * s.h * 0.4, s.w * 2, s.h * 1.4);
-          ctx.globalCompositeOperation = "source-over";
-        }
-        ctx.restore();
+    // 吊り糸
+    ctx.strokeStyle = "rgba(210, 190, 160, 0.05)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (const th of this.threads) {
+      const a = project(cam, th.x, -this.height, th.z);
+      const b = project(cam, th.x, th.top, th.z);
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+    }
+    ctx.stroke();
+
+    const composite = (s: Sheet) => {
+      // 記憶の濃さを 24 段階に丸め、段階が変わったときだけ描き直す
+      const key = Math.round(s.memory * memoryTone * 24);
+      if (s.cache && s.cacheKey === key) return s.cache;
+      const c = s.cache ?? document.createElement("canvas");
+      c.width = Math.max(1, Math.round(Math.min(s.w, 120)));
+      c.height = Math.max(1, Math.round((c.width * s.h) / s.w));
+      const g = c.getContext("2d")!;
+      g.clearRect(0, 0, c.width, c.height);
+      g.globalAlpha = 0.17;
+      g.drawImage(this.papers[s.paper], 0, 0, c.width, c.height);
+      if (key > 0) {
+        g.globalAlpha = Math.min(1, (0.62 * key) / 24);
+        g.drawImage(scene, s.sx, s.sy, s.w, s.h, 0, 0, c.width, c.height);
       }
+      s.cache = c;
+      s.cacheKey = key;
+      return c;
     };
 
-    drawSheets(1);
+    const drawSheet = (s: Sheet, alphaScale: number, mirrorY: number | null) => {
+      const p = project(cam, s.x, s.y, s.z);
+      const w = s.w * p.s;
+      const h = s.h * p.s;
+      if (mirrorY === null) {
+        s.px = p.x;
+        s.py = p.y + h / 2;
+      }
+      if (p.x + w < -w || p.x - w > this.width + w) return;
+      // 奥ほど霞む
+      const fog = Math.exp(-Math.max(0, s.z) / (cam.depth * 2.2));
+      const l = lit(s) * alphaScale * fog;
+      if (l < 0.02) return;
+      const angle = s.tilt + s.angle + Math.sin(t * 0.5 + s.phase) * 0.012;
+      ctx.save();
+      if (mirrorY !== null) {
+        ctx.translate(0, mirrorY * 2);
+        ctx.scale(1, -1);
+      }
+      ctx.translate(p.x, p.y);
+      ctx.rotate(angle);
+      ctx.globalAlpha = Math.min(1, l);
+      ctx.drawImage(composite(s), -w / 2, 0, w, h);
+      if (s.mist > 0.01) {
+        ctx.globalCompositeOperation = "lighter";
+        ctx.globalAlpha = s.mist * s.mist * 0.35 * l;
+        ctx.drawImage(this.fog, -w, -h * 0.2 - (1 - s.mist) * h * 0.4, w * 2, h * 1.4);
+        ctx.globalCompositeOperation = "source-over";
+      }
+      ctx.restore();
+    };
 
-    // 濡れた床に、ぼんやりと映りこむ
-    const floor = this.floorY;
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(0, floor, this.width, this.height - floor);
-    ctx.clip();
-    ctx.translate(0, floor * 2);
-    ctx.scale(1, -1);
-    drawSheets(0.22);
-    ctx.restore();
-    const fade = ctx.createLinearGradient(0, floor, 0, floor + (this.height - floor) * 0.9);
-    fade.addColorStop(0, "rgba(4, 3, 8, 0.2)");
-    fade.addColorStop(1, "rgba(4, 3, 8, 1)");
+    const layers = Math.max(...this.sheets.map((q) => q.layer));
+    for (const s of this.sheets) {
+      // 濡れた床に、ぼんやりと映りこむ（手前の層だけ）
+      if (s.layer <= 1 && layers > 0) drawSheet(s, 0.16, project(cam, s.x, this.floorY, s.z).y);
+      drawSheet(s, 1, null);
+    }
+
+    // 床は手前ほど暗く沈む
+    const horizon = cam.horizon;
+    const fade = ctx.createLinearGradient(0, this.floorY, 0, this.height);
+    fade.addColorStop(0, "rgba(4, 3, 8, 0)");
+    fade.addColorStop(1, "rgba(4, 3, 8, 0.85)");
     ctx.globalAlpha = 1;
     ctx.fillStyle = fade;
-    ctx.fillRect(0, floor, this.width, this.height - floor);
+    ctx.fillRect(0, Math.min(horizon, this.floorY), this.width, this.height);
   }
 }
