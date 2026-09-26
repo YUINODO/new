@@ -15,7 +15,13 @@ const WARM_PALETTE: readonly Rgb[] = [
   [244, 152, 132],
 ];
 
-const BACKGROUND = "rgba(4, 3, 8, 0.22)";
+/** 残像を少しずつ消す。背景色は CSS 側で重ねる（キャンバスは純粋な黒）*/
+const FADE = "rgba(0, 0, 0, 0.22)";
+/**
+ * 8bit の半透明塗りだけでは暗い残像が 1〜2 階調残り続け、線の跡になる。
+ * 毎フレーム 1 階調ずつ差し引いて、完全な黒まで戻す。
+ */
+const FLOOR = "rgb(1, 1, 1)";
 
 type Phase = "forming" | "present" | "gone";
 
@@ -122,7 +128,8 @@ function sampleForm(width: number, height: number, rand: () => number): Form {
 
   const together = rand() < 0.5;
   const figH = Math.min(sh * 0.66, sw * (together ? 0.8 : 1.1));
-  const baseY = sh * 0.94;
+  // 縦長の画面では、足元に寄りすぎないよう中ほどへ
+  const baseY = Math.min(sh * 0.94, sh / 2 + figH * 0.62);
   const cx = sw / 2;
 
   if (together) {
@@ -205,7 +212,7 @@ export class SaudadeEngine {
     this.dpr = Math.min(dpr, 2);
     this.canvas.width = Math.round(width * this.dpr);
     this.canvas.height = Math.round(height * this.dpr);
-    this.ctx.fillStyle = "rgb(4, 3, 8)";
+    this.ctx.fillStyle = "#000";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     const area = width * height;
@@ -462,7 +469,10 @@ export class SaudadeEngine {
     const dpr = this.dpr;
     ctx.globalCompositeOperation = "source-over";
     ctx.globalAlpha = 1;
-    ctx.fillStyle = BACKGROUND;
+    ctx.fillStyle = FADE;
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.globalCompositeOperation = "difference";
+    ctx.fillStyle = FLOOR;
     ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     ctx.globalCompositeOperation = "lighter";
