@@ -33,6 +33,11 @@ export class MotionSensor {
   }
 
   static async start(): Promise<MotionSensor> {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      throw new Error(
+        "このページではカメラを使えません。http://localhost:3000 で開いているか確認してください（http://172.… などのアドレスでは使えません）。",
+      );
+    }
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { width: 320, height: 240, facingMode: "user" },
       audio: false,

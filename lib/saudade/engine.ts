@@ -46,10 +46,6 @@ type Form = {
 
 export type Hand = { x: number; y: number; strength: number };
 
-export type EngineOptions = {
-  onMoment?: (time: Date) => void;
-};
-
 function makeSprite(rgb: Rgb): HTMLCanvasElement {
   const size = 64;
   const c = document.createElement("canvas");
@@ -173,7 +169,6 @@ export class SaudadeEngine {
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
   private readonly sprites: HTMLCanvasElement[];
-  private readonly options: EngineOptions;
 
   private width = 0;
   private height = 0;
@@ -198,11 +193,10 @@ export class SaudadeEngine {
   private residue = 0;
   private appliedBlur = -1;
 
-  constructor(canvas: HTMLCanvasElement, options: EngineOptions = {}) {
+  constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d")!;
     this.sprites = WARM_PALETTE.map(makeSprite);
-    this.options = options;
   }
 
   resize(width: number, height: number, dpr: number) {
@@ -341,7 +335,6 @@ export class SaudadeEngine {
     this.calm = 0;
     this.dwell = 0;
     this.residue = 1;
-    this.options.onMoment?.(new Date());
   }
 
   private step(dt: number) {

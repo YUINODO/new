@@ -5,39 +5,25 @@ import { SaudadeEngine } from "@/lib/saudade/engine";
 import { MotionSensor } from "@/lib/saudade/motion";
 
 type CameraState = "off" | "starting" | "on" | "error";
-type Moment = { id: number; label: string };
 
-const MAX_MOMENTS = 7;
 /** カメラの動きが途切れても、手の気配をしばらく保つ（秒）*/
 const CAMERA_HOLD = 0.5;
-
-function formatMoment(date: Date) {
-  const pad = (n: number, len = 2) => String(n).padStart(len, "0");
-  return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}.${pad(date.getMilliseconds(), 3)}`;
-}
+/** 右上のこの範囲に手が来たときだけ、操作アイコンが浮かぶ（px）*/
+const CONTROLS_ZONE = 160;
 
 export default function SaudadeExperience() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<SaudadeEngine | null>(null);
   const sensorRef = useRef<MotionSensor | null>(null);
-  const momentId = useRef(0);
 
-  const [moments, setMoments] = useState<Moment[]>([]);
-  const [touched, setTouched] = useState(false);
   const [camera, setCamera] = useState<CameraState>("off");
+  const [controlsVisible, setControlsVisible] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const engine = new SaudadeEngine(canvas, {
-      onMoment: (time) => {
-        setTouched(true);
-        setMoments((prev) =>
-          [{ id: momentId.current++, label: formatMoment(time) }, ...prev].slice(0, MAX_MOMENTS),
-        );
-      },
-    });
+    const engine = new SaudadeEngine(canvas);
     engineRef.current = engine;
 
     const resize = () => engine.resize(window.innerWidth, window.innerHeight, window.devicePixelRatio || 1);
@@ -79,20 +65,27 @@ export default function SaudadeExperience() {
     };
   }, []);
 
-  const onPointerMove = useCallback((e: React.PointerEvent) => {
-    if (sensorRef.current) return;
-    engineRef.current?.setHand({ x: e.clientX, y: e.clientY, strength: 1 });
+  const revealControls = useCallback((e: React.PointerEvent) => {
+    setControlsVisible(e.clientX > window.innerWidth - CONTROLS_ZONE && e.clientY < CONTROLS_ZONE);
   }, []);
 
+  const onPointerMove = useCallback((e: React.PointerEvent) => {
+    revealControls(e);
+    if (sensorRef.current) return;
+    engineRef.current?.setHand({ x: e.clientX, y: e.clientY, strength: 1 });
+  }, [revealControls]);
+
   const onPointerLeave = useCallback(() => {
+    setControlsVisible(false);
     if (sensorRef.current) return;
     engineRef.current?.setHand(null);
   }, []);
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
+    revealControls(e);
     engineRef.current?.setHand({ x: e.clientX, y: e.clientY, strength: 1 });
     engineRef.current?.touch(e.clientX, e.clientY);
-  }, []);
+  }, [revealControls]);
 
   const toggleCamera = useCallback(async () => {
     if (sensorRef.current) {
@@ -106,7 +99,9 @@ export default function SaudadeExperience() {
     try {
       sensorRef.current = await MotionSensor.start();
       setCamera("on");
-    } catch {
+    } catch (error) {
+      // 画面には文字を出さず、理由は開発者ツールのコンソールに残す
+      console.warn("[saudade] カメラを起動できませんでした:", error);
       setCamera("error");
     }
   }, []);
@@ -119,57 +114,52 @@ export default function SaudadeExperience() {
     }
   }, []);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "f" || e.key === "F") toggleFullscreen();
+      if (e.key === "c" || e.key === "C") void toggleCamera();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [toggleCamera, toggleFullscreen]);
+
+  const iconButton =
+    "cursor-pointer rounded-full p-2 text-white/40 transition-colors hover:text-white/80 disabled:opacity-40";
+
   return (
     <div
-      className="fixed inset-0 z-[100] cursor-none touch-none select-none overflow-hidden bg-[rgb(4,3,8)] text-[rgb(236,222,205)]"
+      className="fixed inset-0 z-[100] cursor-none touch-none select-none overflow-hidden bg-[rgb(4,3,8)]"
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
       onPointerDown={onPointerDown}
     >
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden />
+      <h1 className="sr-only">saudade — 触れようとすると消える光</h1>
 
-      <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-6 sm:p-8">
-        <div>
-          <h1 className="font-serif text-lg italic tracking-[0.2em] text-white/70">saudade</h1>
-          <p className="mt-1 text-[11px] tracking-[0.25em] text-white/35">もう二度と戻らないものへ</p>
-        </div>
-        <div className="pointer-events-auto flex gap-2" onPointerDown={(e) => e.stopPropagation()}>
-          <button
-            type="button"
-            onClick={toggleCamera}
-            disabled={camera === "starting"}
-            className="cursor-pointer rounded-full border border-white/15 px-3 py-1.5 text-[11px] tracking-widest text-white/50 transition-colors hover:border-white/40 hover:text-white/80"
-          >
-            {camera === "on" ? "カメラ停止" : camera === "starting" ? "起動中…" : "カメラで体験"}
-          </button>
-          <button
-            type="button"
-            onClick={toggleFullscreen}
-            className="cursor-pointer rounded-full border border-white/15 px-3 py-1.5 text-[11px] tracking-widest text-white/50 transition-colors hover:border-white/40 hover:text-white/80"
-          >
-            全画面
-          </button>
-        </div>
-      </div>
-
-      <p
-        className={`pointer-events-none absolute inset-x-0 bottom-10 text-center text-xs tracking-[0.4em] text-white/40 transition-opacity duration-[3000ms] ${touched ? "opacity-0" : "opacity-100"}`}
+      <div
+        className={`absolute right-4 top-4 flex gap-1 transition-opacity duration-700 ${controlsVisible ? "cursor-auto opacity-100" : "pointer-events-none opacity-0"}`}
+        onPointerDown={(e) => e.stopPropagation()}
       >
-        {camera === "on" ? "カメラに向かって、手を伸ばしてみてください" : "手を伸ばして、触れてみてください"}
-      </p>
-      {camera === "error" && (
-        <p className="pointer-events-none absolute inset-x-0 bottom-4 text-center text-[11px] text-white/40">
-          カメラを利用できませんでした
-        </p>
-      )}
-
-      <ol className="pointer-events-none absolute bottom-6 right-6 text-right font-mono text-[11px] leading-6 sm:bottom-8 sm:right-8">
-        {moments.map((m, i) => (
-          <li key={m.id} style={{ opacity: 0.55 * (1 - i / MAX_MOMENTS) }} className="animate-[saudade-in_2s_ease-out]">
-            {m.label} <span className="font-sans tracking-widest">— もう戻らない</span>
-          </li>
-        ))}
-      </ol>
+        <button
+          type="button"
+          onClick={toggleCamera}
+          disabled={camera === "starting"}
+          aria-label={camera === "on" ? "カメラを止める" : "カメラで体験する"}
+          aria-pressed={camera === "on"}
+          className={`${iconButton} ${camera === "on" ? "text-[rgb(255,196,140)]/80" : ""}`}
+        >
+          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.2} aria-hidden>
+            <path d="M3 8.5A1.5 1.5 0 0 1 4.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z" />
+            <circle cx="12" cy="13" r="3.5" />
+            {camera === "error" && <path d="M4 4l16 16" />}
+          </svg>
+        </button>
+        <button type="button" onClick={toggleFullscreen} aria-label="全画面" className={iconButton}>
+          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.2} aria-hidden>
+            <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }
