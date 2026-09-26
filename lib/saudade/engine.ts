@@ -52,6 +52,9 @@ type Form = {
 
 export type Hand = { x: number; y: number; strength: number };
 
+/** マイクから届く音。どちらも 0..1 */
+export type Sound = { voice: number; breath: number };
+
 function makeSprite(rgb: Rgb): HTMLCanvasElement {
   const size = 64;
   const c = document.createElement("canvas");
@@ -200,6 +203,13 @@ export class SaudadeEngine {
   private residue = 0;
   private appliedBlur = -1;
 
+  private sound: Sound = { voice: 0, breath: 0 };
+  private voice = 0;
+  private blow = 0;
+  /** 呼びかけるほど遠ざかる（0..1）。静かにしていると、ゆっくり戻る */
+  private recede = 0;
+  private blowTime = 0;
+
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d")!;
@@ -229,6 +239,10 @@ export class SaudadeEngine {
 
   setHand(hand: Hand | null) {
     this.hand = hand;
+  }
+
+  setSound(sound: Sound | null) {
+    this.sound = sound ?? { voice: 0, breath: 0 };
   }
 
   /** 触れようとした。形がそこにあれば、散っていく。*/
@@ -373,8 +387,19 @@ export class SaudadeEngine {
     }
     this.nearness += (near - this.nearness) * (1 - Math.exp(-dt * 4));
 
+    // 声と息（すばやく立ち上がり、ゆっくり消える）
+    const follow = (cur: number, target: number) =>
+      cur + (target - cur) * (1 - Math.exp(-dt * (target > cur ? 12 : 3)));
+    this.voice = follow(this.voice, this.sound.voice);
+    this.blow = follow(this.blow, this.sound.breath);
+    const hushed = this.voice < 0.1 && this.blow < 0.1;
+
+    // 呼んでも、届かない。呼ぶほどに遠ざかり、静けさの中でだけ戻ってくる
+    if (this.phase !== "gone") this.recede += this.voice * dt * 0.5;
+    this.recede = Math.min(0.75, Math.max(0, this.recede - (hushed ? dt * 0.07 : 0)));
+
     if (this.phase === "gone") {
-      this.calm = this.nearness < 0.15 ? this.calm + dt : 0;
+      this.calm = this.nearness < 0.15 && hushed ? this.calm + dt : 0;
       if (this.phaseTime > 4 && this.calm > 2.5) this.reform();
     } else {
       if (this.phase === "forming" && this.phaseTime > 4.5) this.phase = "present";
@@ -385,14 +410,25 @@ export class SaudadeEngine {
       } else {
         this.dwell = Math.max(0, this.dwell - dt);
       }
+      // 息を吹きかけ続けると、ろうそくの火のように消える
+      this.blowTime = this.blow > 0.45 ? this.blowTime + dt : Math.max(0, this.blowTime - dt * 2);
+      if (this.blowTime > 0.9 && this.form) {
+        this.blowTime = 0;
+        this.dissolve(this.form.cx, this.form.cy + this.form.radius * 1.2);
+      }
     }
 
     const fadeIn = this.phase === "forming" ? smoothstep(0, 4.5, this.phaseTime) : 1;
-    const targetPresence = this.phase === "gone" ? 0 : fadeIn * (1 - 0.85 * Math.pow(this.nearness, 1.2));
+    const flicker = 1 - this.blow * 0.45 * (0.5 + 0.5 * Math.sin(t * 31) * Math.sin(t * 17));
+    const targetPresence =
+      this.phase === "gone"
+        ? 0
+        : fadeIn * (1 - 0.85 * Math.pow(this.nearness, 1.2)) * (1 - this.recede * 0.6) * flicker;
     this.presence += (targetPresence - this.presence) * (1 - Math.exp(-dt * 5));
     this.residue = Math.max(0, this.residue - dt / 18);
 
-    const blur = this.phase === "gone" ? 0 : Math.pow(this.nearness, 1.5) * 18;
+    const blur =
+      this.phase === "gone" ? 0 : Math.max(Math.pow(this.nearness, 1.5) * 18, this.recede * 5);
     if (Math.abs(blur - this.appliedBlur) > 0.15) {
       this.appliedBlur = blur;
       this.canvas.style.filter = blur > 0.2 ? `blur(${blur.toFixed(1)}px)` : "none";
@@ -401,7 +437,10 @@ export class SaudadeEngine {
     const forming = this.phase === "forming";
     const spring = forming ? 2.2 + this.phaseTime * 3 : 16;
     const damping = forming ? 2.4 : 6;
-    const breath = 1 + Math.sin(t * 0.4) * 0.01;
+    // 遠ざかるほど小さく、少し上へ（地平線の方へ）
+    const scale = (1 + Math.sin(t * 0.4) * 0.01) * (1 - this.recede * 0.5);
+    const lift = -this.recede * (this.form?.radius ?? 0) * 0.35;
+    const gust = this.blow * 900;
     const erosion = this.phase === "present" ? 0.012 : 0;
     const handR = 110 + this.nearness * 80;
     const cx = this.form?.cx ?? 0;
@@ -418,10 +457,14 @@ export class SaudadeEngine {
           q.y = q.hy + (this.rand() - 0.5) * 80;
           next.push(q);
         } else {
-          const hx = cx + (p.hx - cx) * breath + Math.sin(t * 0.7 + p.phase) * 1.6;
-          const hy = cy + (p.hy - cy) * breath + Math.cos(t * 0.6 + p.phase * 1.3) * 1.6;
+          const hx = cx + (p.hx - cx) * scale + Math.sin(t * 0.7 + p.phase) * 1.6;
+          const hy = cy + lift + (p.hy - cy) * scale + Math.cos(t * 0.6 + p.phase * 1.3) * 1.6;
           let ax = (hx - p.x) * spring - p.vx * damping;
           let ay = (hy - p.y) * spring - p.vy * damping;
+          if (gust > 1) {
+            ax += Math.sin(p.phase * 7 + t * 9 + p.hy * 0.03) * gust;
+            ay -= (0.4 + 0.6 * Math.abs(Math.sin(p.phase * 5 + t * 6))) * gust;
+          }
           if (sh.strength > 0.01) {
             const dx = p.x - sh.x;
             const dy = p.y - sh.y;
@@ -507,6 +550,10 @@ export class SaudadeEngine {
       let alpha: number;
       if (p.bound) {
         alpha = p.a * p.bright * this.presence;
+        if (this.voice > 0.02 && this.form) {
+          const d = Math.hypot(p.hx - this.form.cx, p.hy - this.form.cy);
+          alpha *= 1 + this.voice * 1.4 * Math.max(0, Math.sin(d * 0.035 - this.time * 7));
+        }
       } else {
         const lifeT = p.life / p.maxLife;
         alpha = p.bright * lifeT * lifeT;

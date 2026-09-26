@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SaudadeEngine } from "@/lib/saudade/engine";
 import { MotionSensor } from "@/lib/saudade/motion";
+import { VoiceSensor } from "@/lib/saudade/voice";
 
-type CameraState = "off" | "starting" | "on" | "error";
+type SensorState = "off" | "starting" | "on" | "error";
 
 /** カメラの動きが途切れても、手の気配をしばらく保つ（秒）*/
 const CAMERA_HOLD = 0.5;
@@ -15,9 +16,13 @@ export default function SaudadeExperience() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<SaudadeEngine | null>(null);
   const sensorRef = useRef<MotionSensor | null>(null);
+  const voiceRef = useRef<VoiceSensor | null>(null);
+  const meterRef = useRef<HTMLDivElement>(null);
 
-  const [camera, setCamera] = useState<CameraState>("off");
+  const [camera, setCamera] = useState<SensorState>("off");
+  const [mic, setMic] = useState<SensorState>("off");
   const [controlsVisible, setControlsVisible] = useState(false);
+  const [meterVisible, setMeterVisible] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -35,7 +40,22 @@ export default function SaudadeExperience() {
 
     let raf = 0;
     let lastSeen = -Infinity;
+    let lastNow = 0;
     const loop = (now: number) => {
+      const dt = lastNow ? Math.min((now - lastNow) / 1000, 0.1) : 1 / 60;
+      lastNow = now;
+      const voice = voiceRef.current;
+      if (voice) {
+        const sound = voice.read(dt);
+        engine.setSound(sound);
+        // 調整用のメーター（D キー）：声・息・音量
+        const bars = meterRef.current?.children;
+        if (bars) {
+          [sound.voice, sound.breath, sound.level].forEach((v, i) => {
+            (bars[i] as HTMLElement).style.transform = `scaleX(${v})`;
+          });
+        }
+      }
       const sensor = sensorRef.current;
       if (sensor) {
         const reading = sensor.read();
@@ -61,6 +81,8 @@ export default function SaudadeExperience() {
       document.body.style.overflow = previousOverflow;
       sensorRef.current?.stop();
       sensorRef.current = null;
+      voiceRef.current?.stop();
+      voiceRef.current = null;
       engineRef.current = null;
     };
   }, []);
@@ -106,6 +128,24 @@ export default function SaudadeExperience() {
     }
   }, []);
 
+  const toggleMic = useCallback(async () => {
+    if (voiceRef.current) {
+      voiceRef.current.stop();
+      voiceRef.current = null;
+      engineRef.current?.setSound(null);
+      setMic("off");
+      return;
+    }
+    setMic("starting");
+    try {
+      voiceRef.current = await VoiceSensor.start();
+      setMic("on");
+    } catch (error) {
+      console.warn("[saudade] マイクを起動できませんでした:", error);
+      setMic("error");
+    }
+  }, []);
+
   const toggleFullscreen = useCallback(() => {
     if (document.fullscreenElement) {
       void document.exitFullscreen();
@@ -118,10 +158,12 @@ export default function SaudadeExperience() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "f" || e.key === "F") toggleFullscreen();
       if (e.key === "c" || e.key === "C") void toggleCamera();
+      if (e.key === "m" || e.key === "M") void toggleMic();
+      if (e.key === "d" || e.key === "D") setMeterVisible((v) => !v);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [toggleCamera, toggleFullscreen]);
+  }, [toggleCamera, toggleMic, toggleFullscreen]);
 
   const iconButton =
     "cursor-pointer rounded-full p-2 text-white/40 transition-colors hover:text-white/80 disabled:opacity-40";
@@ -144,6 +186,20 @@ export default function SaudadeExperience() {
       >
         <button
           type="button"
+          onClick={toggleMic}
+          disabled={mic === "starting"}
+          aria-label={mic === "on" ? "マイクを止める" : "声と息で体験する"}
+          aria-pressed={mic === "on"}
+          className={`${iconButton} ${mic === "on" ? "text-[rgb(255,196,140)]/80" : ""}`}
+        >
+          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.2} aria-hidden>
+            <rect x="9" y="3" width="6" height="11" rx="3" />
+            <path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" />
+            {mic === "error" && <path d="M4 4l16 16" />}
+          </svg>
+        </button>
+        <button
+          type="button"
           onClick={toggleCamera}
           disabled={camera === "starting"}
           aria-label={camera === "on" ? "カメラを止める" : "カメラで体験する"}
@@ -161,6 +217,16 @@ export default function SaudadeExperience() {
             <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
           </svg>
         </button>
+      </div>
+
+      <div
+        ref={meterRef}
+        className={`pointer-events-none absolute bottom-4 left-4 w-40 space-y-1.5 ${meterVisible ? "" : "hidden"}`}
+        aria-hidden
+      >
+        <div className="h-1 origin-left scale-x-0 bg-[rgb(255,196,140)]/70" />
+        <div className="h-1 origin-left scale-x-0 bg-[rgb(200,215,255)]/70" />
+        <div className="h-px origin-left scale-x-0 bg-white/40" />
       </div>
     </div>
   );
